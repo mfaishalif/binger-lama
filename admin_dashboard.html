@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binger Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #0f171e;
+            color: white;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #1a242f;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            color: #F5C418;
+            margin-bottom: 30px;
+        }
+
+        .nav-group {
+            margin-bottom: 40px;
+        }
+
+        .nav-item {
+            color: #8197a4;
+            padding: 12px;
+            display: block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: white;
+            background-color: #2c3a47;
+            border-radius: 4px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            width: calc(100% - 250px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: #1a242f;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-card h3 {
+            color: #8197a4;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .data-section {
+            background-color: #1a242f;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: #F5C418;
+        }
+
+        .more-btn {
+            background: none;
+            border: 1px solid #F5C418;
+            color: #F5C418;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* User Management Styles */
+        .user-form {
+            background-color: #15202b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #8197a4;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            background-color: #1a242f;
+            border: 1px solid #2c3a47;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .form-btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .add-btn {
+            background-color: #F5C418;
+            color: #000;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2c3a47;
+        }
+
+        .user-table th {
+            color: #F5C418;
+            background-color: #15202b;
+        }
+
+        .user-table tr:hover {
+            background-color: #15202b;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .action-btn:hover {
+            color: #ff6b6b;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Add these styles */
+        .nav-group h3 {
+            cursor: pointer;
+            padding: 12px;
+            margin: 10px -12px;
+            background-color: #22303d;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-group h3::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s ease;
+            color: #F5C418;
+        }
+
+        .nav-group h3.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .nav-items {
+            overflow: hidden;
+            transition: all 0.3s ease;
+            max-height: 500px; /* Adjust based on your content */
+        }
+
+        .nav-group.collapsed .nav-items {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Logout Button Styles */
+        .logout-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background-color: #dc3545;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Binger Admin</h2>
+        
+        <div class="nav-group">
+            <h3>Reports</h3>
+            <div class="nav-items">
+                <a href="#" class="nav-item">Site Visits</a>
+                <a href="#" class="nav-item">Registered Users</a>
+                <a href="#" class="nav-item">Current Active Users</a>
+                <a href="#" class="nav-item">User Origins</a>
+                <a href="#" class="nav-item">Platforms</a>
+            </div>
+        </div>
+
+        <div class="nav-group">
+            <h3>Manage Users</h3>
+            <div class="nav-items">
+                <a href="#" class="nav-item">View Users</a>
+                <a href="#" class="nav-item">Banned Users</a>
+                <a href="#" class="nav-item">Muted Users</a>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Site Visits Today</h3>
+                <p class="stat-number">24,589</p>
+            </div>
+            <div class="stat-card">
+                <h3>Registered Users</h3>
+                <p class="stat-number">148,322</p>
+            </div>
+            <div class="stat-card">
+                <h3>Current Active Users</h3>
+                <p class="stat-number">5,842</p>
+            </div>
+        </div>
+
+        <!-- View Users Section -->
+        <div class="data-section" id="viewUsersSection">
+            <div class="section-header">
+                <h2>View Users</h2>
+            </div>
+            <div class="user-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
+                <div class="form-actions">
+                    <button class="form-btn add-btn" onclick="addUser()">Add User</button>
+                </div>
+            </div>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Users will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Banned Users Section -->
+        <div class="data-section" id="bannedUsersSection">
+            <div class="section-header">
+                <h2>Banned Users</h2>
+            </div>
+            <div class="user-form">
+                <div class="form-group">
+                    <label for="bannedUsername">Username</label>
+                    <input type="text" id="bannedUsername" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="bannedEmail">Email</label>
+                    <input type="email" id="bannedEmail" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="banReason">Ban Reason</label>
+                    <input type="text" id="banReason" placeholder="Enter ban reason">
+                </div>
+                <div class="form-actions">
+                    <button class="form-btn add-btn" onclick="addBannedUser()">Add Banned User</button>
+                </div>
+            </div>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Ban Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bannedUsersTableBody">
+                    <!-- Banned users will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Muted Users Section -->
+        <div class="data-section" id="mutedUsersSection">
+            <div class="section-header">
+                <h2>Muted Users</h2>
+            </div>
+            <div class="user-form">
+                <div class="form-group">
+                    <label for="mutedUsername">Username</label>
+                    <input type="text" id="mutedUsername" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="mutedEmail">Email</label>
+                    <input type="email" id="mutedEmail" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="muteReason">Mute Reason</label>
+                    <input type="text" id="muteReason" placeholder="Enter mute reason">
+                </div>
+                <div class="form-group">
+                    <label for="muteDuration">Mute Duration (hours)</label>
+                    <input type="number" id="muteDuration" placeholder="Enter duration">
+                </div>
+                <div class="form-actions">
+                    <button class="form-btn add-btn" onclick="addMutedUser()">Add Muted User</button>
+                </div>
+            </div>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Mute Reason</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="mutedUsersTableBody">
+                    <!-- Muted users will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Add collapsible functionality
+        document.querySelectorAll('.nav-group h3').forEach(header => {
+            header.addEventListener('click', () => {
+                const parent = header.parentElement;
+                parent.classList.toggle('collapsed');
+                header.classList.toggle('collapsed');
+            });
+            
+            // Initialize as expanded
+            header.parentElement.classList.add('collapsed');
+            header.click(); // Start with sections collapsed
+        });
+
+        // User Management Functions
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
+        let mutedUsers = JSON.parse(localStorage.getItem('mutedUsers')) || [];
+
+        function updateTables() {
+            // Update Users Table
+            const usersTableBody = document.getElementById('usersTableBody');
+            usersTableBody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <button class="action-btn" onclick="deleteUser('${user.username}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update Banned Users Table
+            const bannedUsersTableBody = document.getElementById('bannedUsersTableBody');
+            bannedUsersTableBody.innerHTML = bannedUsers.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.reason}</td>
+                    <td>
+                        <button class="action-btn" onclick="deleteBannedUser('${user.username}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update Muted Users Table
+            const mutedUsersTableBody = document.getElementById('mutedUsersTableBody');
+            mutedUsersTableBody.innerHTML = mutedUsers.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.reason}</td>
+                    <td>${user.duration} hours</td>
+                    <td>
+                        <button class="action-btn" onclick="deleteMutedUser('${user.username}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addUser() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (username && email && password) {
+                users.push({ username, email, password });
+                localStorage.setItem('users', JSON.stringify(users));
+                updateTables();
+                document.getElementById('username').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function addBannedUser() {
+            const username = document.getElementById('bannedUsername').value;
+            const email = document.getElementById('bannedEmail').value;
+            const reason = document.getElementById('banReason').value;
+
+            if (username && email && reason) {
+                bannedUsers.push({ username, email, reason });
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+                updateTables();
+                document.getElementById('bannedUsername').value = '';
+                document.getElementById('bannedEmail').value = '';
+                document.getElementById('banReason').value = '';
+            }
+        }
+
+        function addMutedUser() {
+            const username = document.getElementById('mutedUsername').value;
+            const email = document.getElementById('mutedEmail').value;
+            const reason = document.getElementById('muteReason').value;
+            const duration = document.getElementById('muteDuration').value;
+
+            if (username && email && reason && duration) {
+                mutedUsers.push({ username, email, reason, duration });
+                localStorage.setItem('mutedUsers', JSON.stringify(mutedUsers));
+                updateTables();
+                document.getElementById('mutedUsername').value = '';
+                document.getElementById('mutedEmail').value = '';
+                document.getElementById('muteReason').value = '';
+                document.getElementById('muteDuration').value = '';
+            }
+        }
+
+        function deleteUser(username) {
+            users = users.filter(user => user.username !== username);
+            localStorage.setItem('users', JSON.stringify(users));
+            updateTables();
+        }
+
+        function deleteBannedUser(username) {
+            bannedUsers = bannedUsers.filter(user => user.username !== username);
+            localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+            updateTables();
+        }
+
+        function deleteMutedUser(username) {
+            mutedUsers = mutedUsers.filter(user => user.username !== username);
+            localStorage.setItem('mutedUsers', JSON.stringify(mutedUsers));
+            updateTables();
+        }
+
+        // Initialize tables on page load
+        updateTables();
+
+        // Logout function
+        function logout() {
+            // Clear any admin session data
+            localStorage.removeItem('adminSession');
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

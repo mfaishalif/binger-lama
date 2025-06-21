@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.main-header {
+    position: relative;
+    background-color: #1a1a1a;
+    padding: 1rem 2rem;
+    z-index: 1000;
+}
+
+.search-bar-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1F1F1F;
+    padding: 1rem 2rem;
+    display: none;
+    z-index: 1001; /* Higher than header z-index */
+}
+.search-bar-container.active {
+    display: block;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: block;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    background-color: #333;
+    color: #ffffff; /* Explicit white text color */
+    font-size: 1rem;
+    font-family: inherit; /* Ensure emoji compatibility */
+}
+.search-input::placeholder {
+    color: #cccccc; /* Lighter placeholder text */
+    opacity: 1;
+    font-family: inherit;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-group {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.signup {
+    background-color: #F5C418;
+    color: #1a1a1a;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.signup:hover {
+    background-color: #D4A614;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: absolute;
+    right: 30px;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.search-input.active {
+    width: 200px;
+    padding: 0.5rem 1rem;
+    opacity: 1;
+    visibility: visible;
+    background: #333;
+    border-radius: 20px;
+}
+
+.search-icon {
+    font-size: 1.2rem;
+    z-index: 1;
+    position: relative;
+}
+
+.search-icon i {
+    transition: transform 0.3s ease;
+}
+
+.search-icon.active .fa-search {
+    display: none;
+}
+
+.search-icon.active .fa-times {
+    display: inline-block;
+}
+
+.fa-times {
+    display: none;
+}
+
+.movie-grid {
+    padding-top: 120px; /* Increased to account for search bar */
+}
+
+.movie-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+.movie-poster {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    background: #ddd;
+}
+
+.movie-info {
+    padding: 1rem;
+}
+
+.movie-info h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.movie-info p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.watchlist-btn {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.watchlist-btn.added {
+    background-color: #27ae60;
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .nav-group {
+        gap: 1rem;
+    }
+    
+    .search-input.active {
+        width: 150px;
+        right: 25px;
+    }
+    
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header {
+        padding: 1rem;
+    }
+    
+    .nav-group {
+        gap: 0.75rem;
+    }
+    
+    .search-input.active {
+        width: 120px;
+        right: 20px;
+    }
+    
+    .movie-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+}

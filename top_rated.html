@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Rated - Binger</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #0e161e;
+      color: white;
+      padding-top: 75px;
+    }
+    header {
+      padding: 20px 50px;
+      background-color: #1a242f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      color: #0f79af;
+    }
+    nav.nav-left {
+      display: flex;
+      gap: 30px;
+    }
+    nav.nav-left a {
+      margin: 0;
+      padding: 0;
+    }
+    nav.nav-left > * + * {
+      margin-left: 30px;
+    }
+    .nav-left .dropdown {
+      position: relative;
+    }
+    .nav-left .dropdown .dropbtn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 14px 0;
+      font-family: inherit;
+    }
+    .nav-left .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #1a242f;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 4px;
+      z-index: 1001;
+    }
+    .nav-left .dropdown-content a {
+      display: block;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-left .dropdown-content a:hover {
+      background-color: #333;
+    }
+    .nav-left .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    nav.nav-left a, .nav-left .dropdown .dropbtn {
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+    nav.nav-right {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    nav.nav-right a:nth-child(2) {
+      background-color: #F5C418;
+      color: #000000;
+      padding: 10px 25px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      line-height: 1;
+      border: none;
+    }
+    nav.nav-right a:nth-child(2):hover {
+      background-color: #d4a716;
+      color: #000000;
+    }
+    nav.nav-right a:first-child {
+      transition: all 0.3s ease;
+      padding: 8px 0;
+    }
+    .recommended {
+      background-color: #1a242f;
+      border-radius: 8px;
+      margin: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #333;
+    }
+    .section-header h2 {
+      font-size: 24px;
+      color: white;
+    }
+    .recommended .movie-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .movie-card {
+      transition: transform 0.3s ease;
+      background: #0f171e;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #1a242f;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+    .movie-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .movie-info {
+      padding: 15px;
+    }
+    .movie-info h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: white;
+    }
+    .movie-info p {
+      margin: 0;
+      font-size: 14px;
+      color: white;
+    }
+    .page-switcher {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0 0;
+    }
+    .page-switcher button {
+      padding: 8px 16px;
+      background: #F5C418;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #000;
+      transition: background 0.3s;
+    }
+    .page-switcher button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    /* New styles for logged-in profile */
+    .profile-menu {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .profile-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #F5C418;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-circle:hover {
+      transform: scale(1.05);
+    }
+    
+    .profile-circle span {
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background: #1a242f;
+      min-width: 200px;
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    
+    .profile-dropdown.show {
+      display: block;
+    }
+    
+    .dropdown-item {
+      display: block;
+      text-align: left;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      margin: 0;
+    }
+    
+    .dropdown-item:hover {
+      background: #2c3a47;
+    }
+    
+    .dropdown-item.logout {
+      color: white;
+      border-top: 1px solid #2c3a47;
+    }
+    
+    .dropdown-item.view-profile {
+      color: white;
+      border-bottom: 1px solid #2c3a47;
+    }
+    
+    /* Hide login nav when logged in */
+    .logged-in .nav-right {
+      display: none;
+    }
+    
+    /* Show profile menu when logged in */
+    .profile-menu {
+      display: none;
+    }
+    
+    .logged-in .profile-menu {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav-left">
+      <a href="homepage.html">Binger</a>
+      <div class="dropdown">
+        <button class="dropbtn">Movies &#9662;</button>
+        <div class="dropdown-content">
+          <a href="popular.html?type=movie">Popular</a>
+          <a href="now_playing.html">Now Playing</a>
+          <a href="upcoming.html">Upcoming</a>
+          <a href="top_rated.html">Top Rated</a>
+          <a href="trending.html?type=movie">Trending</a>
+          <a href="#">Genres</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">TV Shows &#9662;</button>
+        <div class="dropdown-content">
+          <a href="popular.html?type=tv">Popular</a>
+          <a href="#">Airing Today</a>
+          <a href="#">On The Air</a>
+          <a href="#">Top Rated</a>
+          <a href="trending.html?type=tv">Trending</a>
+          <a href="#">Genres</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">People &#9662;</button>
+        <div class="dropdown-content">
+          <a href="#">Trending</a>
+          <a href="#">Popular</a>
+        </div>
+      </div>
+    </nav>
+    <nav class="nav-right">
+      <a href="#">Login</a>
+      <a href="#">Sign Up</a>
+    </nav>
+    <div class="profile-menu">
+      <div class="profile-circle" id="profileToggle">
+        <span>U</span>
+      </div>
+      <div class="profile-dropdown" id="profileDropdown">
+        <a href="user_profile_page.html" class="dropdown-item view-profile">View Profile</a>
+        <div class="dropdown-item logout">Log Out</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="recommended">
+      <div class="section-header">
+        <h2>Top Rated Movies</h2>
+      </div>
+      <div class="movie-container"></div>
+      <div class="page-switcher">
+        <button id="prevPage" disabled>Previous</button>
+        <span id="currentPage">1</span>
+        <button id="nextPage">Next</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check if user is logged in (from localStorage)
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        document.body.classList.add('logged-in');
+      }
+      
+      // Profile dropdown toggle
+      const profileToggle = document.getElementById('profileToggle');
+      const profileDropdown = document.getElementById('profileDropdown');
+      
+      profileToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+      });
+      
+      // Close dropdown when clicking elsewhere
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+          profileDropdown.classList.remove('show');
+        }
+      });
+      
+      // Logout functionality
+      document.querySelector('.dropdown-item.logout').addEventListener('click', () => {
+        localStorage.removeItem('isLoggedIn');
+        document.body.classList.remove('logged-in');
+        window.location.href = 'homepage.html';
+      });
+      
+      // Login functionality
+      const loginButton = document.querySelector("nav.nav-right a:first-child");
+      if (loginButton) {
+        loginButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.setItem('isLoggedIn', 'true');
+          document.body.classList.add('logged-in');
+        });
+      }
+      
+      // Load initial movies
+      loadTopRated();
+
+      // Pagination event listeners
+      document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          loadTopRated();
+        }
+      });
+
+      document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        loadTopRated();
+      });
+    });
+
+    const API_KEY = "3939bbef15e0c49e0479e0d747a70d28";
+    let currentPage = 1;
+
+    function loadTopRated() {
+      fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=${currentPage}`)
+        .then(res => res.json())
+        .then(data => {
+          displayMovies(data.results);
+          document.getElementById("currentPage").textContent = currentPage;
+          document.getElementById("prevPage").disabled = currentPage === 1;
+          document.getElementById("nextPage").disabled = currentPage === data.total_pages;
+        })
+        .catch(err => console.error(err));
+    }
+
+    function displayMovies(movies) {
+      const container = document.querySelector(".movie-container");
+      container.innerHTML = "";
+      movies.forEach(movie => {
+        const card = document.createElement("div");
+        card.className = "movie-card";
+        card.innerHTML = `
+          <img src="${movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : "https://via.placeholder.com/200x300"}" alt="${movie.title} poster">
+          <div class="movie-info">
+            <h3>${movie.title}</h3>
+            <p>${movie.release_date ? movie.release_date.split("-")[0] : "N/A"} • ★ ${movie.vote_average.toFixed(1)}</p>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          window.location.href = `info.html?id=${movie.id}&type=movie`;
+        });
+        container.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html> 

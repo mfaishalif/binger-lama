@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binger - More Items</title>
+  <style>
+    /* Basic Reset and Fonts */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #000;
+      color: white;
+      padding-top: 75px;
+    }
+    /* Header */
+    header {
+      padding: 20px 50px;
+      background-color: #1a242f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      color: #0f79af;
+    }
+    /* Main Content */
+    .more-container {
+      max-width: 1200px;
+      margin: 80px auto 40px;
+      padding: 20px;
+    }
+    .more-container h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    /* Grid Layout for Items */
+    .grid-container {
+      display: grid;
+      gap: 20px;
+      /* Responsive grid: 1 column on small screens, then 2, 3, or more */
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .grid-item {
+      background: #0f171e;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #1a242f;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .grid-item:hover {
+      transform: translateY(-5px);
+    }
+    .grid-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .item-info {
+      padding: 15px;
+    }
+    .item-info h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: white;
+    }
+    .item-info p {
+      font-size: 14px;
+      color: white;
+    }
+    /* Back Button */
+    #backButton {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background: #F5C418;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #backButton:hover {
+      background: #d4a716;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header>
+    <nav class="nav-left">
+      <a href="index.html">Binger</a>
+      <div class="dropdown">
+        <button class="dropbtn">Movies &#9662;</button>
+        <div class="dropdown-content">
+          <a href="index.html?category=popular">Popular</a>
+          <a href="index.html?category=nowplaying">Now Playing</a>
+          <a href="index.html?category=upcoming">Upcoming</a>
+          <a href="index.html?category=toprated">Top Rated</a>
+          <a href="index.html?category=trending">Trending</a>
+          <a href="index.html?category=genres">Genres</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">TV Shows &#9662;</button>
+        <div class="dropdown-content">
+          <a href="index.html?category=popular&type=tv">Popular</a>
+          <a href="index.html?category=airingtoday&type=tv">Airing Today</a>
+          <a href="index.html?category=ontheair&type=tv">On The Air</a>
+          <a href="index.html?category=toprated&type=tv">Top Rated</a>
+          <a href="index.html?category=trending&type=tv">Trending</a>
+          <a href="index.html?category=genres&type=tv">Genres</a>
+        </div>
+      </div>
+    </nav>
+    <nav class="nav-right">
+      <a href="#">Login</a>
+      <a href="#">Sign Up</a>
+    </nav>
+  </header>
+
+  <!-- Main Container for More Items -->
+  <div class="more-container">
+    <h1 id="pageTitle">More Items</h1>
+    <div id="itemsGrid" class="grid-container"></div>
+    <button id="backButton" onclick="window.history.back()">Go Back</button>
+  </div>
+
+  <script>
+    const API_KEY = "3939bbef15e0c49e0479e0d747a70d28";
+
+    // Get query parameters to decide which items to load
+    const params = new URLSearchParams(window.location.search);
+    // 'section': either "trending" or "popular"
+    const section = params.get("section") || "trending";
+    // 'type': either "tv" or "movie"
+    const type = params.get("type") || "tv";
+
+    // Set the page title based on parameters
+    const pageTitle = document.getElementById("pageTitle");
+    pageTitle.textContent = `${section.charAt(0).toUpperCase() + section.slice(1)} ${type === "tv" ? "TV Shows" : "Movies"}`;
+
+    // Determine the correct endpoint based on section and type
+    let endpoint = "";
+    if (section === "trending") {
+      endpoint = `trending/${type}/day`;
+    } else if (section === "popular") {
+      endpoint = `${type}/popular`;
+    }
+
+    // Fetch items from TMDB API endpoint
+    async function fetchMoreItems(endpoint) {
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/${endpoint}?api_key=${API_KEY}&language=en-US&page=1`);
+        const data = await res.json();
+        return data.results;
+      } catch (error) {
+        console.error("Error fetching more items:", error);
+        return [];
+      }
+    }
+
+    // Render items in the grid
+    function renderItems(items) {
+      const grid = document.getElementById("itemsGrid");
+      grid.innerHTML = "";
+      items.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add("grid-item");
+        card.innerHTML = `
+          <img src="${item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : "https://via.placeholder.com/200x300"}" alt="${type === "tv" ? item.name : item.title} poster">
+          <div class="item-info">
+            <h3>${type === "tv" ? item.name : item.title}</h3>
+            <p>${(type === "tv" ? item.first_air_date : item.release_date || "").split("-")[0] || "N/A"} • ★ ${item.vote_average.toFixed(1)}</p>
+          </div>
+        `;
+        // Add click handler to go to a detailed info page
+        card.addEventListener("click", async () => {
+          // For simplicity, reusing showMediaDetails if you wish to open a modal
+          // Or you can redirect to a dedicated details page.
+          // Here, we'll open an info modal by calling showMediaDetails (assume that function is shared)
+          await showMediaDetails(item.id, type);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    // Function to load more items
+    async function loadMore() {
+      const items = await fetchMoreItems(endpoint);
+      renderItems(items);
+    }
+    
+    // Dummy showMediaDetails function for demonstration.
+    // In your actual project, replace this with your already-defined function.
+    async function showMediaDetails(id, type) {
+      // Redirect to a details page or open a modal.
+      // For this demo, we just alert.
+      alert(`Show details for ${type} with ID: ${id}`);
+    }
+
+    // Load items on page load
+    loadMore();
+  </script>
+</body>
+</html>

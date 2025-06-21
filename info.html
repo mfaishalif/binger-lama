@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info - Binger</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #0e161e;
+      color: white;
+      padding-top: 75px;
+    }
+    header {
+      padding: 20px 50px;
+      background-color: #1a242f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 30px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      color: #0f79af;
+    }
+    /* Updated Navbar Styles from Homepage */
+    nav.nav-left {
+      display: flex;
+      gap: 30px;
+    }
+    nav.nav-left a {
+      margin: 0;
+      padding: 0;
+    }
+    nav.nav-left > * + * {
+      margin-left: 30px;
+    }
+    .nav-left .dropdown {
+      position: relative;
+    }
+    .nav-left .dropdown .dropbtn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 14px 0;
+      font-family: inherit;
+    }
+    .nav-left .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #1a242f;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 4px;
+      z-index: 1001;
+    }
+    .nav-left .dropdown-content a {
+      display: block;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+      white-space: nowrap;
+      margin-left: 0;
+    }
+    .nav-left .dropdown-content a:hover {
+      background-color: #333;
+    }
+    .nav-left .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    nav.nav-left a, .nav-left .dropdown .dropbtn {
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+    nav.nav-right {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    nav.nav-right a:nth-child(2) {
+      background-color: #F5C418;
+      color: #000000;
+      padding: 10px 25px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      line-height: 1;
+      border: none;
+      margin-left: 0;
+    }
+    nav.nav-right a:nth-child(2):hover {
+      background-color: #d4a716;
+      color: #000000;
+    }
+    nav.nav-right a:first-child {
+      transition: all 0.3s ease;
+      padding: 8px 0;
+    }
+    /* Info Page Styles */
+    .info-page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    /* Card styling */
+    .info-card {
+      background-color: #1a242f;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+    .info-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .info-modal-poster {
+      flex: 0 0 300px;
+    }
+    .info-modal-poster img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .info-modal-details {
+      flex: 1;
+    }
+    .info-modal-title {
+      font-size: 32px;
+      margin-bottom: 15px;
+      color: #F5C418;
+    }
+    .info-modal-meta {
+      color: #8197a4;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    .info-modal-genres {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .info-modal-genre {
+      background: #2c3a47;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    .info-modal-overview {
+      margin-bottom: 25px;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .user-actions {
+      margin: 20px 0;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 20px;
+      background-color: #15202b;
+      border-radius: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+  
+        .user-actions button, .user-actions select, .user-actions input {
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #2c3a47;
+      background-color: #1a242f;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      min-width: 100px;
+    }
+    .user-actions button:hover, .user-actions select:hover, .user-actions input:hover {
+      background-color: #333;
+    }
+    .user-actions input[type="text"] {
+      min-width: 150px;
+    }
+    .rating {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .star {
+      font-size: 24px;
+      cursor: pointer;
+      color: #8197a4;
+    }
+    .star.filled {
+      color: #F5C418;
+    }
+    .cast-crew-section {
+      margin-top: 30px;
+      background-color: #15202b;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .cast-crew-section h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      color: #F5C418;
+    }
+    .cast-crew-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .cast-card, .crew-card {
+      width: 120px;
+      text-align: center;
+      font-size: 14px;
+      background-color: #2c3a47;
+      border-radius: 8px;
+      padding: 10px;
+      transition: transform 0.2s;
+    }
+    .cast-card:hover, .crew-card:hover {
+      transform: translateY(-5px);
+    }
+    .cast-card img, .crew-card img {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .extra-info {
+      margin-top: 20px;
+      background-color: #15202b;
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .extra-info ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    .extra-info a {
+      color: #F5C418;
+      text-decoration: none;
+    }
+    .extra-info a:hover {
+      text-decoration: underline;
+    }
+    /* Comment Section Styles */
+    .comment-section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #15202b;
+      border-radius: 8px;
+    }
+
+    .comment-section h2 {
+      color: #F5C418;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      padding: 12px;
+      border: 1px solid #2c3a47;
+      border-radius: 4px;
+      background-color: #1a242f;
+      color: white;
+      font-size: 14px;
+    }
+
+    .comment-form textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .comment-form button {
+      align-self: flex-end;
+      background-color: #F5C418;
+      color: #000;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .comment-form button:hover {
+      background-color: #d4a716;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .comment {
+      position: relative;    /* <-- add this */
+      background-color: #1a242f;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 3px solid #F5C418;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: #f55;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      color: #fff;
+    }
+
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #8197a4;
+      font-size: 0.9em;
+    }
+
+    .comment-author {
+      color: #F5C418;
+      font-weight: bold;
+    }
+
+    .comment-content {
+      line-height: 1.5;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1002;
+    }
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #1a242f;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-size: 20px;
+      color: #F5C418;
+    }
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    .collection-list, .tier-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+    .collection-item, .tier-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #2c3a47;
+      cursor: pointer;
+    }
+    .collection-item:hover, .tier-item:hover {
+      background-color: #2c3a47;
+    }
+    .collection-item input[type="checkbox"], .tier-item input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    .create-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      padding: 8px 15px;
+      background-color: #F5C418;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .create-btn:hover {
+      background-color: #d4a716;
+    }
+
+    .create-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .create-form input, .create-form select {
+      padding: 8px;
+      border: 1px solid #2c3a47;
+      border-radius: 4px;
+      background-color: #15202b;
+      color: white;
+    }
+
+    .create-form select {
+      cursor: pointer;
+    }
+
+    .create-form .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .create-form label {
+      color: #8197a4;
+    }
+
+    .create-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .modal-footer button {
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .save-btn {
+      background-color: #F5C418;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .save-btn:hover {
+      background-color: #d4a716;
+      transform: translateY(-2px);
+    }
+    .cancel-btn {
+      background-color: #2c3a47;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .cancel-btn:hover {
+      background-color: #3d4d5d;
+      transform: translateY(-2px);
+    }
+    .create-form .form-actions button {
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .create-form .form-actions .save-btn:hover,
+    .create-form .form-actions .cancel-btn:hover {
+      transform: translateY(-2px);
+    }
+    /* New styles for logged-in profile */
+    .profile-menu {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .profile-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #F5C418;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-circle:hover {
+      transform: scale(1.05);
+    }
+    
+    .profile-circle span {
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background: #1a242f;
+      min-width: 200px;
+      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    
+    .profile-dropdown.show {
+      display: block;
+    }
+    
+    .dropdown-item {
+      display: block;
+      text-align: left;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      margin: 0;
+    }
+    
+    .dropdown-item:hover {
+      background: #2c3a47;
+    }
+    
+    .dropdown-item.logout {
+      color: white;
+      border-top: 1px solid #2c3a47;
+    }
+    
+    .dropdown-item.view-profile {
+      color: white;
+      border-bottom: 1px solid #2c3a47;
+    }
+    
+    /* Hide login nav when logged in */
+    .logged-in .nav-right {
+      display: none;
+    }
+    
+    /* Show profile menu when logged in */
+    .profile-menu {
+      display: none;
+    }
+    
+    .logged-in .profile-menu {
+      display: inline-block;
+    }
+  </style>
+
+</head>
+<body>
+  <header>
+    <nav class="nav-left">
+      <a href="homepage.html">Binger</a>
+      <div class="dropdown">
+        <button class="dropbtn">Movies &#9662;</button>
+        <div class="dropdown-content">
+          <a href="popular.html?type=movie">Popular</a>
+          <a href="now-playing.html">Now Playing</a>
+          <a href="upcoming.html">Upcoming</a>
+          <a href="top-rated.html">Top Rated</a>
+          <a href="trending.html?type=movie">Trending</a>
+          <a href="genres.html">Genres</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">TV Shows &#9662;</button>
+        <div class="dropdown-content">
+          <a href="popular.html?type=tv">Popular</a>
+          <a href="airing-today.html">Airing Today</a>
+          <a href="on-the-air.html">On The Air</a>
+          <a href="top-rated-tv.html">Top Rated</a>
+          <a href="trending.html?type=tv">Trending</a>
+          <a href="genres-tv.html">Genres</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">People &#9662;</button>
+        <div class="dropdown-content">
+          <a href="trending-people.html">Trending</a>
+          <a href="popular-people.html">Popular</a>
+        </div>
+      </div>
+    </nav>
+    <nav class="nav-right">
+      <a href="#">Login</a>
+      <a href="#">Sign Up</a>
+    </nav>
+    <div class="profile-menu">
+      <div class="profile-circle" id="profileToggle">
+        <span>U</span>
+      </div>
+      <div class="profile-dropdown" id="profileDropdown">
+        <a href="user_profile_page.html" class="dropdown-item view-profile">View Profile</a>
+        <div class="dropdown-item logout">Log Out</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="info-page">
+    <!-- Card wrapper added here -->
+    <div class="info-card">
+      <!-- Info Container where data will be loaded -->
+      <div id="infoContent" class="info-container">
+        <!-- Loader or placeholder content can be added here -->
+        <p>Loading information...</p>
+      </div>
+      <!-- Comment Section -->
+      <div class="comment-section">
+        <h2>Discussion</h2>
+        <form id="commentForm" class="comment-form">
+          <textarea id="commentText" placeholder="Add your comment..." required></textarea>
+          <button type="submit">Post Comment</button>
+        </form>
+        <div class="comments-list" id="commentsList"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Check if user is logged in at the beginning
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check login status
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        document.body.classList.add('logged-in');
+      }
+      
+      // Profile dropdown toggle
+      const profileToggle = document.getElementById('profileToggle');
+      const profileDropdown = document.getElementById('profileDropdown');
+      
+      profileToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+      });
+      
+      // Close dropdown when clicking elsewhere
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+          profileDropdown.classList.remove('show');
+        }
+      });
+      
+      // Logout functionality
+      document.querySelector('.dropdown-item.logout').addEventListener('click', () => {
+        localStorage.removeItem('isLoggedIn');
+        document.body.classList.remove('logged-in');
+        window.location.href = 'homepage.html';
+      });
+      
+      // Login functionality
+      const loginButton = document.querySelector("nav.nav-right a:first-child");
+      if (loginButton) {
+        loginButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.setItem('isLoggedIn', 'true');
+          document.body.classList.add('logged-in');
+        });
+      }
+      
+      // Initial load of comments
+      loadComments();
+    });
+    
+    // Utility function to parse URL query parameters
+    function getQueryParams() {
+      const params = {};
+      window.location.search.substring(1).split("&").forEach(pair => {
+        const [key, value] = pair.split("=");
+        if (key) {
+          params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+        }
+      });
+      return params;
+    }
+
+    // Global modal functions
+    function showCreateCollectionModal() {
+      const collectionModal = document.getElementById('collectionModal');
+      const createCollectionModal = document.getElementById('createCollectionModal');
+      collectionModal.style.display = 'none';
+      createCollectionModal.style.display = 'block';
+    }
+
+    function showCreateTierModal() {
+      const tierModal = document.getElementById('tierModal');
+      const createTierModal = document.getElementById('createTierModal');
+      tierModal.style.display = 'none';
+      createTierModal.style.display = 'block';
+    }
+
+    // Extract id and type (movie or tv) from query params
+    const { id, type } = getQueryParams();
+
+    // Validate parameters; if missing, display error message
+    if (!id || !type) {
+      document.getElementById("infoContent").innerHTML = "<p>Error: Missing media ID or type.</p>";
+    } else {
+      const API_KEY = "3939bbef15e0c49e0479e0d747a70d28";
+
+      async function fetchDetails(mediaId, mediaType) {
+        try {
+          const res = await fetch(`https://api.themoviedb.org/3/${mediaType}/${mediaId}?api_key=${API_KEY}&language=en-US&append_to_response=credits`);
+          const data = await res.json();
+          return data;
+        } catch (err) {
+          console.error("Error fetching details:", err);
+          return null;
+        }
+      }
+
+      function buildCastGallery(cast) {
+        if (!cast || !cast.length) return "";
+        return `
+          <div class="cast-crew-section">
+            <h2>Cast Gallery</h2>
+            <div class="cast-crew-container">
+              ${cast.map(member => `
+                <div class="cast-card">
+                  <img src="${member.profile_path ? `https://image.tmdb.org/t/p/w200${member.profile_path}` : "https://via.placeholder.com/200x300?text=No+Image"}" alt="${member.name}">
+                  <p>${member.name}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function buildCrewGallery(crew) {
+        if (!crew || !crew.length) return "";
+        return `
+          <div class="cast-crew-section">
+            <h2>Crew Gallery</h2>
+            <div class="cast-crew-container">
+              ${crew.map(member => `
+                <div class="crew-card">
+                  <img src="${member.profile_path ? `https://image.tmdb.org/t/p/w200${member.profile_path}` : "https://via.placeholder.com/200x300?text=No+Image"}" alt="${member.name}">
+                  <p>${member.name} (${member.job})</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function buildInfoPage(data, mediaType) {
+        const genreNames = data.genres ? data.genres.map(g => g.name) : [];
+        const cast = data.credits && data.credits.cast ? data.credits.cast.slice(0, 5) : [];
+        const crew = data.credits && data.credits.crew ? data.credits.crew.filter(member => ["Director", "Producer"].includes(member.job)) : [];
+        const prodCompanies = data.production_companies && data.production_companies.length ? data.production_companies.map(comp => comp.name).join(", ") : "N/A";
+
+        let extraInfo = `
+          <div class="extra-info">
+            <strong>Status:</strong> ${data.status || "N/A"}<br>
+            <strong>Production:</strong> ${prodCompanies}<br>
+            ${data.homepage ? `<strong>Homepage:</strong> <a href="${data.homepage}" target="_blank">Visit</a><br>` : ""}
+            
+            <div style="margin-top: 15px;">
+              <strong>Cast:</strong>
+              <ul>
+                ${cast.map(member => `<li>${member.name} as ${member.character || "N/A"}</li>`).join("")}
+              </ul>
+              <strong>Crew:</strong>
+              <ul>
+                ${crew.map(member => `<li>${member.job}: ${member.name}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+        `;
+
+        const castGallery = buildCastGallery(cast);
+        const crewGallery = buildCrewGallery(crew);
+
+        return `
+          <div class="info-modal-poster">
+            <img src="${data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : "https://via.placeholder.com/500x750"}" alt="${mediaType === "tv" ? data.name : data.title} poster">
+          </div>
+          <div class="info-modal-details">
+            <h1 class="info-modal-title">${mediaType === "tv" ? data.name : data.title}</h1>
+            <div class="info-modal-meta">
+              <span>${mediaType === "tv" ? data.first_air_date : data.release_date} • </span>
+              <span>★ ${data.vote_average.toFixed(1)} • </span>
+              <span>${Math.floor(data.runtime || data.episode_run_time?.[0] || 0)} mins</span>
+            </div>
+            ${ genreNames.length ? `<div class="info-modal-genres">${genreNames.map(genre => `<span class="info-modal-genre">${genre}</span>`).join("")}</div>` : "" }
+            <p class="info-modal-overview">${data.overview || "No overview available."}</p>
+            ${extraInfo}
+          </div>
+
+            <div class="user-actions">
+              <button id="favoriteBtn">☆ Favorite</button>
+              <button id="collectionBtn">Add to Collection</button>
+              <button id="tierBtn">Add to Tierlist</button>
+              <select id="statusSelect">
+                <option value="">Status</option>
+                <option value="watched">Watched</option>
+                <option value="want-to-watch">Want to Watch</option>
+              </select>
+              <div id="rating" class="rating">
+                <select id="ratingSelect">
+                  <option value="">Rate (1-10)</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+            </div>
+          </div>
+
+          <!-- Collection Modal -->
+          <div id="collectionModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Save to Collection</h3>
+                <button class="close-modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="collection-list" id="collectionList">
+                  <!-- Collections will be populated here -->
+                </div>
+              </div>
+              <button class="create-btn" onclick="showCreateCollectionModal()">Create Collection</button>
+              <div class="modal-footer">
+                <button class="cancel-btn">Cancel</button>
+                <button class="save-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Create Collection Modal -->
+          <div id="createCollectionModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Create Collection</h3>
+                <button class="close-modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form class="create-form" id="createCollectionForm">
+                  <div class="form-group">
+                    <label for="collectionName">Collection Name</label>
+                    <input type="text" id="collectionName" placeholder="Enter collection name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="collectionPrivacy">Privacy Setting</label>
+                    <select id="collectionPrivacy" required>
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Create</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier List Modal -->
+          <div id="tierModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Add to Tier List</h3>
+                <button class="close-modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="tier-list" id="tierList">
+                  <!-- Tiers will be populated here -->
+                </div>
+              </div>
+              <button class="create-btn" onclick="showCreateTierModal()">Create Tier List</button>
+              <div class="modal-footer">
+                <button class="cancel-btn">Cancel</button>
+                <button class="save-btn">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Create Tier List Modal -->
+          <div id="createTierModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Create Tier List</h3>
+                <button class="close-modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form class="create-form" id="createTierForm">
+                  <div class="form-group">
+                    <label for="tierName">Tier List Name</label>
+                    <input type="text" id="tierName" placeholder="Enter tier list name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="tierPrivacy">Privacy Setting</label>
+                    <select id="tierPrivacy" required>
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Create</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          ${castGallery}
+          ${crewGallery}
+        `;
+      }
+
+  function initUserFeatures(type, id, title) {
+    const key = `${type}_${id}`;
+
+    // 1) Favorite button
+    const favBtn = document.getElementById('favoriteBtn');
+    let favs = JSON.parse(localStorage.getItem('favorites')||'[]');
+    const isFav = favs.some(item=>item.key===key);
+    favBtn.textContent = isFav? '★ Favorited' : '☆ Favorite';
+    favBtn.addEventListener('click', () => {
+      favs = JSON.parse(localStorage.getItem('favorites')||'[]');
+      const idx = favs.findIndex(item=>item.key===key);
+      if (idx > -1) {
+        favs.splice(idx,1);
+        favBtn.textContent = '☆ Favorite';
+      } else {
+        favs.push({key, title, type, id});
+        favBtn.textContent = '★ Favorited';
+      }
+      localStorage.setItem('favorites', JSON.stringify(favs));
+    });
+
+    // 2) Status Select
+    const statusSelect = document.getElementById('statusSelect');
+    const statuses = JSON.parse(localStorage.getItem('statuses')||'{}');
+    const currentStatus = statuses[key] || '';
+    statusSelect.value = currentStatus;
+    statusSelect.addEventListener('change', () => {
+      if (statusSelect.value) {
+        statuses[key] = statusSelect.value;
+      } else {
+        delete statuses[key];
+      }
+      localStorage.setItem('statuses', JSON.stringify(statuses));
+    });
+
+    // 3) Rating select
+    const ratingSelect = document.getElementById('ratingSelect');
+    const ratings = JSON.parse(localStorage.getItem('ratings')||'{}');
+    const current = ratings[key] || '';
+    ratingSelect.value = current;
+    ratingSelect.addEventListener('change', () => {
+      if (ratingSelect.value) {
+        ratings[key] = ratingSelect.value;
+      } else {
+        delete ratings[key];
+      }
+        localStorage.setItem('ratings', JSON.stringify(ratings));
+    });
+  }
+
+      // Fetch data and update page content
+      fetchDetails(id, type).then(data => {
+        if(data) {
+          document.getElementById("infoContent").innerHTML = buildInfoPage(data, type);
+          
+          // Initialize basic user features
+          initUserFeatures(type, id, type === "tv" ? data.name : data.title);
+          
+          // Initialize modals after content is loaded
+          const key = `${type}_${id}`;
+          const title = type === "tv" ? data.name : data.title;
+          
+          // Collection modal initialization
+          const collectionBtn = document.getElementById('collectionBtn');
+          const collectionModal = document.getElementById('collectionModal');
+          const createCollectionModal = document.getElementById('createCollectionModal');
+          const collectionList = document.getElementById('collectionList');
+          const createCollectionForm = document.getElementById('createCollectionForm');
+          const collections = JSON.parse(localStorage.getItem('collections')||'{}');
+
+          function updateCollectionList() {
+            collectionList.innerHTML = '';
+            Object.keys(collections).forEach(name => {
+              const item = document.createElement('div');
+              item.className = 'collection-item';
+              
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.id = `collection_${name}`;
+              if (collections[name].items && collections[name].items.some(item => item.key === key)) {
+                checkbox.checked = true;
+              }
+              
+              const label = document.createElement('label');
+              label.htmlFor = `collection_${name}`;
+              label.textContent = name;
+              
+              item.appendChild(checkbox);
+              item.appendChild(label);
+              collectionList.appendChild(item);
+            });
+          }
+
+          collectionBtn.addEventListener('click', () => {
+            updateCollectionList();
+            collectionModal.style.display = 'block';
+          });
+
+          createCollectionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('collectionName').value.trim();
+            const privacy = document.getElementById('collectionPrivacy').value;
+            
+            if (name && !collections[name]) {
+              collections[name] = {
+                items: [],
+                privacy: privacy
+              };
+              localStorage.setItem('collections', JSON.stringify(collections));
+              updateCollectionList();
+              createCollectionModal.style.display = 'none';
+              collectionModal.style.display = 'block';
+              createCollectionForm.reset();
+            }
+          });
+
+          // Tier List modal initialization
+          const tierBtn = document.getElementById('tierBtn');
+          const tierModal = document.getElementById('tierModal');
+          const createTierModal = document.getElementById('createTierModal');
+          const tierList = document.getElementById('tierList');
+          const createTierForm = document.getElementById('createTierForm');
+          const tiers = JSON.parse(localStorage.getItem('tierlist')||'{}');
+
+          function updateTierList() {
+            tierList.innerHTML = '';
+            Object.keys(tiers).forEach(name => {
+              const item = document.createElement('div');
+              item.className = 'tier-item';
+              
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.id = `tier_${name}`;
+              if (tiers[name].items && tiers[name].items.some(item => item.key === key)) {
+                checkbox.checked = true;
+              }
+              
+              const label = document.createElement('label');
+              label.htmlFor = `tier_${name}`;
+              label.textContent = `Tier ${name}`;
+              
+              item.appendChild(checkbox);
+              item.appendChild(label);
+              tierList.appendChild(item);
+            });
+          }
+
+          tierBtn.addEventListener('click', () => {
+            updateTierList();
+            tierModal.style.display = 'block';
+          });
+
+          createTierForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('tierName').value.trim();
+            const privacy = document.getElementById('tierPrivacy').value;
+            
+            if (name && !tiers[name]) {
+              tiers[name] = {
+                items: [],
+                privacy: privacy
+              };
+              localStorage.setItem('tierlist', JSON.stringify(tiers));
+              updateTierList();
+              createTierModal.style.display = 'none';
+              tierModal.style.display = 'block';
+              createTierForm.reset();
+            }
+          });
+
+          // Modal close handlers
+          document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+              collectionModal.style.display = 'none';
+              tierModal.style.display = 'none';
+              createCollectionModal.style.display = 'none';
+              createTierModal.style.display = 'none';
+            });
+          });
+
+          document.querySelectorAll('.cancel-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              collectionModal.style.display = 'none';
+              tierModal.style.display = 'none';
+              createCollectionModal.style.display = 'none';
+              createTierModal.style.display = 'none';
+            });
+          });
+
+          // Save handlers
+          document.querySelectorAll('.modal-footer .save-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              // Identify which modal we're in
+              const modalParent = btn.closest('.modal');
+              
+              if (modalParent.id === 'collectionModal') {
+                // Save collections
+                document.querySelectorAll('#collectionList input[type="checkbox"]').forEach(checkbox => {
+                  const name = checkbox.id.replace('collection_', '');
+                  if (checkbox.checked && collections[name].items && !collections[name].items.some(item => item.key === key)) {
+                    collections[name].items.push({key, title, type, id});
+                  } else if (!checkbox.checked && collections[name].items) {
+                    collections[name].items = collections[name].items.filter(item => item.key !== key);
+                  }
+                });
+                localStorage.setItem('collections', JSON.stringify(collections));
+              } else if (modalParent.id === 'tierModal') {
+                // Save tiers
+                document.querySelectorAll('#tierList input[type="checkbox"]').forEach(checkbox => {
+                  const name = checkbox.id.replace('tier_', '');
+                  if (checkbox.checked && tiers[name].items && !tiers[name].items.some(item => item.key === key)) {
+                    tiers[name].items.push({key, title, type, id});
+                  } else if (!checkbox.checked && tiers[name].items) {
+                    tiers[name].items = tiers[name].items.filter(item => item.key !== key);
+                  }
+                });
+                localStorage.setItem('tierlist', JSON.stringify(tiers));
+              }
+              
+              // Hide all modals
+              collectionModal.style.display = 'none';
+              tierModal.style.display = 'none';
+            });
+          });
+        } else {
+          document.getElementById("infoContent").innerHTML = "<p>Error loading information.</p>";
+        }
+      });
+    }
+
+    // Comment System using localStorage
+    const commentForm = document.getElementById('commentForm');
+    const commentsList = document.getElementById('commentsList');
+
+    // Generate unique storage key based on media
+    const storageKey = `comments_${type}_${id}`;
+
+    // Load existing comments
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
+      commentsList.innerHTML = comments.map((c,i) => `
+        <div class="comment">
+          <button class="delete-btn" data-index="${i}">✕</button>
+          <div class="comment-header">
+            <span class="comment-author">${c.author}</span>
+            <span>${new Date(c.timestamp).toLocaleString()}</span>
+          </div>
+          <div class="comment-content">${c.text}</div>
+        </div>
+      `).join('');
+      // Wire up delete buttons
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          removeComment(parseInt(btn.dataset.index, 10));
+        });
+      });
+    }
+
+
+    function saveComment(text) {
+      const comment = { author: 'Ronaldo420', text, timestamp: new Date().toISOString() };
+      const comments = JSON.parse(localStorage.getItem(storageKey))||[];
+      comments.unshift(comment);
+      localStorage.setItem(storageKey, JSON.stringify(comments));
+      loadComments();
+    }
+
+    function removeComment(index) {
+      const comments = JSON.parse(localStorage.getItem(storageKey)) || [];
+      if (index >= 0 && index < comments.length) {
+        comments.splice(index, 1);
+        localStorage.setItem(storageKey, JSON.stringify(comments));
+        loadComments();
+      }
+    }
+
+    // Form submission handler
+    commentForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const text = document.getElementById('commentText').value.trim();
+      if (!text) return;              // nothing to post
+      saveComment(text);               // uses Ronaldo420 internally
+      commentForm.reset();
+    });
+
+
+    // Initial load of comments
+    loadComments();
+  </script>
+</body>

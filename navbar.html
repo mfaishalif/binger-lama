@@ -1,0 +1,125 @@
+<!-- Navbar Styles -->
+<style>
+  nav.nav-left {
+    display: flex;
+    gap: 30px;
+  }
+  nav.nav-left a {
+    margin: 0;
+    padding: 0;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  nav.nav-left > * + * {
+    margin-left: 30px;
+  }
+  .nav-left .dropdown {
+    position: relative;
+  }
+  .nav-left .dropdown .dropbtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 14px 0;
+    font-family: inherit;
+  }
+  .nav-left .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1a242f;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1001;
+  }
+  .nav-left .dropdown-content a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 0;
+  }
+  .nav-left .dropdown-content a:hover {
+    background-color: #333;
+  }
+  .nav-left .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  nav.nav-left a, .nav-left .dropdown .dropbtn {
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+  nav.nav-right {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+  nav.nav-right a:nth-child(2) {
+    background-color: #F5C418;
+    color: #000000;
+    padding: 10px 25px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    line-height: 1;
+    border: none;
+    margin-left: 0;
+  }
+  nav.nav-right a:nth-child(2):hover {
+    background-color: #d4a716;
+    color: #000000;
+  }
+  nav.nav-right a:first-child {
+    transition: all 0.3s ease;
+    padding: 8px 0;
+  }
+  nav.nav-right a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+</style>
+
+<!-- Navbar HTML -->
+<nav class="nav-left">
+  <a href="index.html">Binger</a>
+  <div class="dropdown">
+    <button class="dropbtn">Movies &#9662;</button>
+    <div class="dropdown-content">
+      <a href="index.html#popular">Popular</a>
+      <a href="index.html#now-playing">Now Playing</a>
+      <a href="index.html#upcoming">Upcoming</a>
+      <a href="index.html#top-rated">Top Rated</a>
+      <a href="index.html#trending">Trending</a>
+      <a href="index.html#genres">Genres</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">TV Shows &#9662;</button>
+    <div class="dropdown-content">
+      <a href="index.html#popular">Popular</a>
+      <a href="index.html#airing-today">Airing Today</a>
+      <a href="index.html#on-air">On The Air</a>
+      <a href="index.html#top-rated">Top Rated</a>
+      <a href="index.html#trending">Trending</a>
+      <a href="index.html#genres">Genres</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">People &#9662;</button>
+    <div class="dropdown-content">
+      <a href="index.html#trending">Trending</a>
+      <a href="index.html#popular">Popular</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav-right">
+  <a href="login.html">Login</a>
+  <a href="signup.html">Sign Up</a>
+</nav> 
